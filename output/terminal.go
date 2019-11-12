@@ -1,14 +1,19 @@
 package output
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/vertan/allabolag-cli/scrape"
+)
 
 func PrintShort(info string) {
 	fmt.Println("Company info, short version")
 	fmt.Println(info)
 }
 
-func PrintSummary(info string) {
+func PrintSummary(c scrape.Company) {
 	fmt.Println("Allabolag.se Summary")
 	fmt.Println("====================")
-	fmt.Printf("Link: %s\n", info)
+	fmt.Printf("Name: %s\n", c.Name)
+	fmt.Printf("Link: %s\n", c.Link)
 }

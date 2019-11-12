@@ -29,6 +29,6 @@ func main() {
 
 	scraper := scrape.NewAllaBolagScraper()
 
-	links, _ := scraper.Search(searchTerm)
-	output.PrintSummary(links[0])
+	companies, _ := scraper.Search(searchTerm)
+	output.PrintSummary(companies[0])
 }
