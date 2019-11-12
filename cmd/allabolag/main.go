@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 
 	"github.com/vertan/allabolag-cli/output"
 )
@@ -10,17 +9,19 @@ import (
 const minPositionalArgs = 1
 
 func main() {
-	fmt.Println("allabolag-cli")
-
+	// Parse flags
 	shortMode := flag.Bool("t", false, "print company information in terse form")
 	flag.Parse()
 
+	// Company search term is a required argument
 	if flag.NArg() < minPositionalArgs {
 		flag.Usage()
 	}
 
+	searchTerm := flag.Arg(0)
+
 	if *shortMode {
-		output.PrintShort("Caspeco AB")
+		output.PrintShort(searchTerm)
 	}
 
 }
