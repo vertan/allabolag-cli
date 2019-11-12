@@ -2,7 +2,7 @@ package output
 
 import "fmt"
 
-func printShort(toPrint string) {
+func PrintShort(toPrint string) {
 	fmt.Println("Company info, short version")
 	fmt.Println(toPrint)
 }

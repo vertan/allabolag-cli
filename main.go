@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+
+	"github.com/vertan/allabolag-cli/output"
 )
 
 const minPositionalArgs = 1
@@ -18,7 +20,7 @@ func main() {
 	}
 
 	if *shortMode {
-		output.printShort("Caspeco AB")
+		output.PrintShort("Caspeco AB")
 	}
 
 }
