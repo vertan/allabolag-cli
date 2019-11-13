@@ -2,6 +2,7 @@ package scrape
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/gocolly/colly"
 )
@@ -24,6 +25,24 @@ func (s *AllaBolagScraper) Search(term string) ([]Company, error) {
 	c.Visit(fmt.Sprintf(searchUrl, term))
 
 	return companies, nil
+}
+
+func (s *AllaBolagScraper) Details(comp Company) (CompanyDetails, error) {
+	c := colly.NewCollector()
+	details := CompanyDetails{}
+	details.Company = comp
+
+	nums := []string{}
+
+	c.OnHTML(".company-account-figures td", func(e *colly.HTMLElement) {
+		figure := strings.Trim(e.Text, "\t \n")
+		nums = append(nums, figure)
+	})
+	c.Visit(comp.Link)
+
+	details.Fiscal.Revenue = nums[0]
+
+	return details, nil
 }
 
 func NewAllaBolagScraper() *AllaBolagScraper {

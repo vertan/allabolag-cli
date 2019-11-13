@@ -30,5 +30,6 @@ func main() {
 	scraper := scrape.NewAllaBolagScraper()
 
 	companies, _ := scraper.Search(searchTerm)
-	output.PrintSummary(companies[0])
+	company, _ := scraper.Details(companies[0])
+	output.PrintSummary(company)
 }

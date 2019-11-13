@@ -11,9 +11,10 @@ func PrintShort(info string) {
 	fmt.Println(info)
 }
 
-func PrintSummary(c scrape.Company) {
+func PrintSummary(c scrape.CompanyDetails) {
 	fmt.Println("Allabolag.se Summary")
 	fmt.Println("====================")
-	fmt.Printf("Name: %s\n", c.Name)
-	fmt.Printf("Link: %s\n", c.Link)
+	fmt.Printf("Name: %s\n", c.Company.Name)
+	fmt.Printf("Revenue: %s K SEK\n", c.Fiscal.Revenue)
+	fmt.Printf("Link: %s\n", c.Company.Link)
 }
