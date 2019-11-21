@@ -14,8 +14,6 @@ func PrintShort(info string) {
 }
 
 func PrintSummary(c scrape.CompanyDetails) {
-	fmt.Println("Allabolag.se Summary")
-	fmt.Println("--------------------")
 	fmt.Printf("Name: %s\n", c.Company.Name)
 	fmt.Printf("Link: %s\n", c.Company.Link)
 	fmt.Println("--------------------")
