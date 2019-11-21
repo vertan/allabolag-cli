@@ -31,5 +31,5 @@ func main() {
 
 	companies, _ := scraper.Search(searchTerm)
 	company, _ := scraper.Details(companies[0])
-	output.PrintSummary(company)
+	output.PrintSummary(*company)
 }
