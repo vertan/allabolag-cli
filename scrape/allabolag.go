@@ -1,23 +1,32 @@
 package scrape
 
 import (
+	"errors"
 	"fmt"
-	"strings"
+	"regexp"
+	"strconv"
 
 	"github.com/gocolly/colly"
 )
 
 type AllaBolagScraper struct{}
 
-const searchUrl = "https://www.allabolag.se/what/%s"
+const (
+	searchUrl    = "https://www.allabolag.se/what/%s"
+	yearsToFetch = 5
+)
 
 func (s *AllaBolagScraper) Search(term string) ([]Company, error) {
 	c := colly.NewCollector()
 	companies := []Company{}
 
+	re := regexp.MustCompile(`(.+/).+$`)
+
 	c.OnHTML(".search-results__item__title a[href]", func(e *colly.HTMLElement) {
 		name := e.Text
-		link := e.Attr("href")
+		rawLink := e.Attr("href")
+		link := re.FindStringSubmatch(rawLink)[1]
+
 		comp := Company{Name: name, Link: link}
 		companies = append(companies, comp)
 	})
@@ -27,24 +36,63 @@ func (s *AllaBolagScraper) Search(term string) ([]Company, error) {
 	return companies, nil
 }
 
-func (s *AllaBolagScraper) Details(comp Company) (CompanyDetails, error) {
+func (s *AllaBolagScraper) Details(comp Company) (*CompanyDetails, error) {
 	c := colly.NewCollector()
 	details := CompanyDetails{}
 	details.Company = comp
 
-	nums := []string{}
+	years := []string{}
+	figures := []string{}
 
-	c.OnHTML(".company-account-figures td", func(e *colly.HTMLElement) {
-		figure := strings.Trim(e.Text, "\t \n")
-		nums = append(nums, figure)
+	c.OnHTML(".chart__label", func(e *colly.HTMLElement) {
+		years = append(years, e.Text)
 	})
-	c.Visit(comp.Link)
 
-	details.Fiscal.Revenue = nums[0]
+	c.OnHTML(".chart__data", func(e *colly.HTMLElement) {
+		figures = append(figures, e.Attr("value"))
+	})
+	c.Visit(fmt.Sprintf("%sbokslut", comp.Link))
 
-	return details, nil
+	fiscalDetails, err := convertToFiscalDetails(years[:yearsToFetch], figures[:yearsToFetch*2])
+	if err != nil {
+		return nil, err
+	}
+
+	details.FiscalDetails = fiscalDetails
+
+	return &details, nil
 }
 
 func NewAllaBolagScraper() *AllaBolagScraper {
 	return &AllaBolagScraper{}
+}
+
+func convertToFiscalDetails(years, figures []string) ([]FiscalDetails, error) {
+	converted := []FiscalDetails{}
+
+	pad := 0
+	for _, v := range years {
+		y, err := strconv.Atoi(v)
+		if err != nil {
+			return nil, errors.New("year conversion failed")
+		}
+		rev, err := strconv.Atoi(figures[pad])
+		if err != nil {
+			return nil, errors.New("revenue conversion failed")
+		}
+		res, err := strconv.Atoi(figures[pad+1])
+		if err != nil {
+			return nil, errors.New("result conversion failed")
+		}
+
+		fd := FiscalDetails{
+			Year:    y,
+			Revenue: rev,
+			Result:  res,
+		}
+		converted = append(converted, fd)
+		pad += 2
+	}
+
+	return converted, nil
 }
