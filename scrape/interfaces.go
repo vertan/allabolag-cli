@@ -12,10 +12,11 @@ type Company struct {
 
 type CompanyDetails struct {
 	Company
-	Fiscal
+	FiscalDetails []FiscalDetails
 }
 
-type Fiscal struct {
-	Year    string
-	Revenue string
+type FiscalDetails struct {
+	Year    int
+	Revenue int
+	Result  int
 }
