@@ -8,9 +8,11 @@ import (
 	"github.com/vertan/allabolag-cli/scrape"
 )
 
-func PrintShort(info string) {
-	fmt.Println("Company info, short version")
-	fmt.Println(info)
+func PrintTerse(c scrape.CompanyDetails) {
+	fmt.Printf("Name: %s\n", c.Company.Name)
+	fmt.Printf("Link: %s\n", c.Company.Link)
+	fmt.Printf("Revenue (%d): %dk\n", c.FiscalDetails[0].Year, c.FiscalDetails[0].Revenue)
+	fmt.Printf("Results (%d): %dk\n", c.FiscalDetails[0].Year, c.FiscalDetails[0].Result)
 }
 
 func PrintSummary(c scrape.CompanyDetails) {

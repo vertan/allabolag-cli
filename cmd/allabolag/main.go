@@ -12,7 +12,7 @@ const minPositionalArgs = 1
 
 func main() {
 	// Parse flags
-	shortMode := flag.Bool("t", false, "print company information in terse form")
+	terseMode := flag.Bool("t", false, "print company information in terse form")
 	flag.Parse()
 
 	// Company search term is a required argument
@@ -22,14 +22,13 @@ func main() {
 	}
 
 	searchTerm := flag.Arg(0)
-
-	if *shortMode {
-		output.PrintShort(searchTerm)
-	}
-
 	scraper := scrape.NewAllaBolagScraper()
 
 	companies, _ := scraper.Search(searchTerm)
 	company, _ := scraper.Details(companies[0])
-	output.PrintSummary(*company)
+	if *terseMode {
+		output.PrintTerse(*company)
+	} else {
+		output.PrintSummary(*company)
+	}
 }
