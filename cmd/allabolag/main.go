@@ -12,7 +12,7 @@ const minPositionalArgs = 1
 
 func main() {
 	// Parse flags
-	terseMode := flag.Bool("t", false, "print company information in terse form")
+	terse := flag.Bool("t", false, "print company information in terse form")
 	flag.Parse()
 
 	// Company search term is a required argument
@@ -21,14 +21,43 @@ func main() {
 		log.Fatal("missing required argument: search term")
 	}
 
-	searchTerm := flag.Arg(0)
+	query := flag.Arg(0)
 	scraper := scrape.NewAllaBolagScraper()
 
-	companies, _ := scraper.Search(searchTerm)
-	company, _ := scraper.Details(companies[0])
-	if *terseMode {
-		output.PrintTerse(*company)
-	} else {
-		output.PrintSummary(*company)
+	run(scraper, query, *terse)
+}
+
+func run(s scrape.CompanyInfoScraper, query string, terse bool) {
+	companies := getCompanies(s, query)
+	if len(companies) == 0 {
+		output.PrintNoResult(query)
+		return
 	}
+
+	details := getDetails(s, companies[0])
+
+	outputDetails(*details, terse)
+}
+
+func getCompanies(s scrape.CompanyInfoScraper, query string) []scrape.Company {
+	companies, _ := s.Search(query)
+	// TODO: Handle parsing failure
+
+	return companies
+}
+
+func getDetails(s scrape.CompanyInfoScraper, company scrape.Company) *scrape.CompanyDetails {
+	details, _ := s.Details(company)
+	// TODO: Handle parsing failure
+
+	return details
+}
+
+func outputDetails(details scrape.CompanyDetails, terse bool) {
+	if terse {
+		output.PrintTerse(details)
+		return
+	}
+
+	output.PrintSummary(details)
 }

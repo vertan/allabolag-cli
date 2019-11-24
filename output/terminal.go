@@ -11,15 +11,24 @@ import (
 func PrintTerse(c scrape.CompanyDetails) {
 	fmt.Printf("%s\n", c.Company.Name)
 	fmt.Printf("%s\n", c.Company.Link)
-	fmt.Printf("Revenue (%d): %dk\n", c.FiscalDetails[0].Year, c.FiscalDetails[0].Revenue)
-	fmt.Printf("Results (%d): %dk\n", c.FiscalDetails[0].Year, c.FiscalDetails[0].Result)
+
+	if len(c.FiscalDetails) > 0 {
+		fmt.Printf("Revenue (%d): %dk\n", c.FiscalDetails[0].Year, c.FiscalDetails[0].Revenue)
+		fmt.Printf("Results (%d): %dk\n", c.FiscalDetails[0].Year, c.FiscalDetails[0].Result)
+	}
 }
 
 func PrintSummary(c scrape.CompanyDetails) {
 	fmt.Printf("%s\n", c.Company.Name)
 	fmt.Printf("%s\n", c.Company.Link)
-	fmt.Println("--------------------")
-	printFiscalTable(c.FiscalDetails)
+	if len(c.FiscalDetails) > 0 {
+		fmt.Println("--------------------")
+		printFiscalTable(c.FiscalDetails)
+	}
+}
+
+func PrintNoResult(t string) {
+	fmt.Printf("No result found for search term %s\n", t)
 }
 
 func printFiscalTable(details []scrape.FiscalDetails) {

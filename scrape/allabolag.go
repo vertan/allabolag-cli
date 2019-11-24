@@ -12,8 +12,8 @@ import (
 type AllaBolagScraper struct{}
 
 const (
-	searchUrl    = "https://www.allabolag.se/what/%s"
-	yearsToFetch = 5
+	searchUrl       = "https://www.allabolag.se/what/%s"
+	maxYearsToFetch = 5
 )
 
 func (s *AllaBolagScraper) Search(term string) ([]Company, error) {
@@ -53,6 +53,7 @@ func (s *AllaBolagScraper) Details(comp Company) (*CompanyDetails, error) {
 	})
 	c.Visit(fmt.Sprintf("%sbokslut", comp.Link))
 
+	yearsToFetch := min(len(years), maxYearsToFetch)
 	fiscalDetails, err := convertToFiscalDetails(years[:yearsToFetch], figures[:yearsToFetch*2])
 	if err != nil {
 		return nil, err
@@ -95,4 +96,11 @@ func convertToFiscalDetails(years, figures []string) ([]FiscalDetails, error) {
 	}
 
 	return converted, nil
+}
+
+func min(a, b int) int {
+	if a > b {
+		return b
+	}
+	return a
 }
