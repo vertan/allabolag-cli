@@ -34,3 +34,5 @@ Year  Revenue   Result
 2014  389061k   32456k
 ```
 
+## TODO
+* Automate binary building for releases
