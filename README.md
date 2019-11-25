@@ -1,4 +1,6 @@
 # allabolag-cli
+![](https://github.com/vertan/allabolag-cli/workflows/Tests/badge.svg)
+
 A simple CLI tool written in Go to get information from the site allabolag.se, which serves information about Swedish companies.
 
 ## Features
