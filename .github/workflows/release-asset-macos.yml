@@ -30,11 +30,11 @@ jobs:
 
       - name: Build and archive for Linux/amd64
         run: |
-          GOOS=linux GOARCH=amd64 go build ./cmd/allabolag && tar -czvf allabolag-${{ steps.get_version.outputs.VERSION }}-darwin-amd64.tar.gz ./allabolag && rm ./allabolag
+          GOOS=linux GOARCH=amd64 go build ./cmd/allabolag && tar -czvf allabolag-${{ steps.get_version.outputs.VERSION }}-linux-amd64.tar.gz ./allabolag && rm ./allabolag
 
       - name: Build and archive for Windows/amd64
         run: |
-          GOOS=windows GOARCH=amd64 go build ./cmd/allabolag && tar -czvf allabolag-${{ steps.get_version.outputs.VERSION }}-darwin-amd64.tar.gz ./allabolag.exe && rm ./allabolag.exe
+          GOOS=windows GOARCH=amd64 go build ./cmd/allabolag && tar -czvf allabolag-${{ steps.get_version.outputs.VERSION }}-windows-amd64.tar.gz ./allabolag.exe && rm ./allabolag.exe
           
       - name: Create Release
         id: create_release
