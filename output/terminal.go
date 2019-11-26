@@ -19,7 +19,7 @@ func PrintTerse(c scrape.CompanyDetails) {
 	}
 }
 
-// PrintTerse outputs company details in a summary format to the terminal.
+// PrintSummary outputs company details in a summary format to the terminal.
 func PrintSummary(c scrape.CompanyDetails) {
 	fmt.Printf("%s\n", c.Company.Name)
 	fmt.Printf("%s\n", c.Company.Link)
