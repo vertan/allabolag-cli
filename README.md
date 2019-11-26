@@ -18,8 +18,8 @@ $ go install github.com/vertan/allabolag-cli/cmd/allabolag
 
 Or, you can download one of the binary distributions from the releases page on Github (make sure to pick the right binary for your system):
 ```bash
-$ wget https://github.com/vertan/allabolag-cli/releases/download/v0.2.1/allabolag-v0.2.1-darwin-amd64.tar.gz
-$ tar -xzvf allabolag-v0.2.1-darwin-amd64.tar.gz /usr/bin/local
+$ wget https://github.com/vertan/allabolag-cli/releases/download/v0.2.2/allabolag-v0.2.2-darwin-amd64.tar.gz
+$ tar -xzvf allabolag-v0.2.2-darwin-amd64.tar.gz /usr/bin/local
 ```
 
 ## Usage
@@ -38,5 +38,3 @@ Year  Revenue   Result
 2014  389061k   32456k
 ```
 
-## TODO
-* Automate binary building for releases
