@@ -1,6 +1,7 @@
 # allabolag-cli
-![](https://github.com/vertan/allabolag-cli/workflows/Tests/badge.svg)
-![](https://img.shields.io/github/v/release/vertan/allabolag-cli?sort=semver)
+![Test status](https://github.com/vertan/allabolag-cli/workflows/Tests/badge.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/vertan/allabolag-cli)](https://goreportcard.com/report/github.com/vertan/allabolag-cli)
+![Current release](https://img.shields.io/github/v/release/vertan/allabolag-cli?sort=semver)
 
 A simple CLI tool written in Go to get information from the site allabolag.se, which serves information about Swedish companies.
 
