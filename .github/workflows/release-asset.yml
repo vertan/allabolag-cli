@@ -19,18 +19,20 @@ jobs:
           
       - name: Checkout code
         uses: actions/checkout@master
+
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
         
       - name: Build and archive for MacOS/amd64
         run: |
-          GOOS=darwin GOARCH=amd64 go build ./cmd/allabolag && tar -czvf allabolag-${{ github.ref }}-darwin-amd64.tar.gz ./allabolag && rm ./allabolag
-
+          GOOS=darwin GOARCH=amd64 go build ./cmd/allabolag && tar -czvf allabolag-${{ steps.get_version.outputs.VERSION }}-darwin-amd64.tar.gz ./allabolag && rm ./allabolag
       - name: Build and archive for Linux/amd64
         run: |
-          GOOS=linux GOARCH=amd64 go build ./cmd/allabolag && tar -czvf allabolag-${{ github.ref }}-darwin-amd64.tar.gz ./allabolag && rm ./allabolag
-
+          GOOS=linux GOARCH=amd64 go build ./cmd/allabolag && tar -czvf allabolag-${{ steps.get_version.outputs.VERSION }}-linux-amd64.tar.gz ./allabolag && rm ./allabolag
       - name: Build and archive for Windows/amd64
         run: |
-          GOOS=windows GOARCH=amd64 go build ./cmd/allabolag && tar -czvf allabolag-${{ github.ref }}-darwin-amd64.tar.gz ./allabolag.exe && rm ./allabolag.exe
+          GOOS=windows GOARCH=amd64 go build ./cmd/allabolag && tar -czvf allabolag-${{ steps.get_version.outputs.VERSION }}-windows-amd64.tar.gz ./allabolag.exe && rm ./allabolag.exe
           
       - name: Create Release
         id: create_release
@@ -39,39 +41,39 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: allabolag-cli ${{ github.ref }}
-          draft: false
+          release_name: allabolag-cli ${{ steps.get_version.outputs.VERSION }}
+          draft: true
           prerelease: false
           
       - name: Upload Asset For MacOS
-        id: upload-release-asset 
+        id: upload-release-asset-macos
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./allabolag-${{ github.ref }}-darwin-amd64.tar.gz
-          asset_name: allabolag-${{ github.ref }}-darwin-amd64.tar.gz
+          asset_path: ./allabolag-${{ steps.get_version.outputs.VERSION }}-darwin-amd64.tar.gz
+          asset_name: allabolag-${{ steps.get_version.outputs.VERSION }}-darwin-amd64.tar.gz
           asset_content_type: application/gzip
 
       - name: Upload Asset For Linux
-        id: upload-release-asset 
+        id: upload-release-asset-linux
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./allabolag-${{ github.ref }}-linux-amd64.tar.gz
-          asset_name: allabolag-${{ github.ref }}-linux-amd64.tar.gz
+          asset_path: ./allabolag-${{ steps.get_version.outputs.VERSION }}-linux-amd64.tar.gz
+          asset_name: allabolag-${{ steps.get_version.outputs.VERSION }}-linux-amd64.tar.gz
           asset_content_type: application/gzip
 
       - name: Upload Asset For Windows
-        id: upload-release-asset 
+        id: upload-release-asset-windows
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./allabolag-${{ github.ref }}-windows-amd64.tar.gz
-          asset_name: allabolag-${{ github.ref }}-windows-amd64.tar.gz
-          asset_content_type: application/gzip          
+          asset_path: ./allabolag-${{ steps.get_version.outputs.VERSION }}-windows-amd64.tar.gz
+          asset_name: allabolag-${{ steps.get_version.outputs.VERSION }}-windows-amd64.tar.gz
+          asset_content_type: application/gzip
