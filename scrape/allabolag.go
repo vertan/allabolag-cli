@@ -9,13 +9,15 @@ import (
 	"github.com/gocolly/colly"
 )
 
+// AllaBolagScraper is an implementation of CompanyInfoScraper fetching info from allabolag.se.
 type AllaBolagScraper struct{}
 
 const (
-	searchUrl       = "https://www.allabolag.se/what/%s"
+	searchURL       = "https://www.allabolag.se/what/%s"
 	maxYearsToFetch = 5
 )
 
+// Search takes a search term as a parameter and searches allabolag.se for companies.
 func (s *AllaBolagScraper) Search(term string) ([]Company, error) {
 	c := colly.NewCollector()
 	companies := []Company{}
@@ -31,11 +33,12 @@ func (s *AllaBolagScraper) Search(term string) ([]Company, error) {
 		companies = append(companies, comp)
 	})
 
-	_ = c.Visit(fmt.Sprintf(searchUrl, term))
+	_ = c.Visit(fmt.Sprintf(searchURL, term))
 
 	return companies, nil
 }
 
+// Details returns details about a specific company.
 func (s *AllaBolagScraper) Details(comp Company) (*CompanyDetails, error) {
 	c := colly.NewCollector()
 	details := CompanyDetails{}
@@ -64,6 +67,7 @@ func (s *AllaBolagScraper) Details(comp Company) (*CompanyDetails, error) {
 	return &details, nil
 }
 
+// NewAllaBolagScraper returns a new AllaBolagScraper
 func NewAllaBolagScraper() *AllaBolagScraper {
 	return &AllaBolagScraper{}
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/vertan/allabolag-cli/scrape"
 )
 
+// PrintTerse outputs company details in a terse format to the terminal.
 func PrintTerse(c scrape.CompanyDetails) {
 	fmt.Printf("%s\n", c.Company.Name)
 	fmt.Printf("%s\n", c.Company.Link)
@@ -18,6 +19,7 @@ func PrintTerse(c scrape.CompanyDetails) {
 	}
 }
 
+// PrintTerse outputs company details in a summary format to the terminal.
 func PrintSummary(c scrape.CompanyDetails) {
 	fmt.Printf("%s\n", c.Company.Name)
 	fmt.Printf("%s\n", c.Company.Link)
@@ -27,10 +29,12 @@ func PrintSummary(c scrape.CompanyDetails) {
 	}
 }
 
+// PrintNoResult outputs a string for when there's no results..
 func PrintNoResult(t string) {
 	fmt.Printf("No result found for search term %s\n", t)
 }
 
+// printFiscalTable renders tabular financial data to the terminal.
 func printFiscalTable(details []scrape.FiscalDetails) {
 	w := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0)
 	fmt.Fprintln(w, "Year\tRevenue\tResult")
