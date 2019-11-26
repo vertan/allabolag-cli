@@ -31,7 +31,7 @@ func (s *AllaBolagScraper) Search(term string) ([]Company, error) {
 		companies = append(companies, comp)
 	})
 
-	c.Visit(fmt.Sprintf(searchUrl, term))
+	_ = c.Visit(fmt.Sprintf(searchUrl, term))
 
 	return companies, nil
 }
@@ -51,7 +51,7 @@ func (s *AllaBolagScraper) Details(comp Company) (*CompanyDetails, error) {
 	c.OnHTML(".chart__data", func(e *colly.HTMLElement) {
 		figures = append(figures, e.Attr("value"))
 	})
-	c.Visit(fmt.Sprintf("%sbokslut", comp.Link))
+	_ = c.Visit(fmt.Sprintf("%sbokslut", comp.Link))
 
 	yearsToFetch := min(len(years), maxYearsToFetch)
 	fiscalDetails, err := convertToFiscalDetails(years[:yearsToFetch], figures[:yearsToFetch*2])
