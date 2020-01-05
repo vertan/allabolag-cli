@@ -1,6 +1,7 @@
 package scrape
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"regexp"
@@ -17,6 +18,11 @@ const (
 	maxYearsToFetch = 5
 )
 
+type ParsedCompany struct {
+	Name string `json:"jurnamn"`
+	Link string `json:"linkTo"`
+}
+
 // Search takes a search term as a parameter and searches allabolag.se for companies.
 func (s *AllaBolagScraper) Search(term string) ([]Company, error) {
 	c := colly.NewCollector()
@@ -24,13 +30,16 @@ func (s *AllaBolagScraper) Search(term string) ([]Company, error) {
 
 	re := regexp.MustCompile(`(.+/).+$`)
 
-	c.OnHTML(".search-results__item__title a[href]", func(e *colly.HTMLElement) {
-		name := e.Text
-		rawLink := e.Attr("href")
-		link := re.FindStringSubmatch(rawLink)[1]
+	c.OnHTML("search", func(e *colly.HTMLElement) {
+		raw := e.Attr(":search-result-default")
+		parsed := []ParsedCompany{}
+		json.Unmarshal([]byte(raw), &parsed)
 
-		comp := Company{Name: name, Link: link}
-		companies = append(companies, comp)
+		for _, c := range parsed {
+			link := fmt.Sprintf("https://www.allabolag.se/%s", re.FindStringSubmatch(c.Link)[1])
+			comp := Company{Name: c.Name, Link: link}
+			companies = append(companies, comp)
+		}
 	})
 
 	_ = c.Visit(fmt.Sprintf(searchURL, term))
